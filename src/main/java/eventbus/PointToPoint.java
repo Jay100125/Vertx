@@ -14,7 +14,7 @@ public class PointToPoint {
   public static void main(String[] args) {
     Vertx vertx = Vertx.vertx();
     vertx.deployVerticle(new Sender());
-    vertx.deployVerticle(Receiver.class.getName(), new DeploymentOptions().setInstances(5));
+//    vertx.deployVerticle(Receiver.class.getName(), new DeploymentOptions().setInstances(5));
   }
 
  public static class Sender extends AbstractVerticle {

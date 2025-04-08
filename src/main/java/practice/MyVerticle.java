@@ -25,6 +25,10 @@ public class MyVerticle extends AbstractVerticle
 //    LOG.info("Vertx Event Loop Pool Size: " + option.getEventLoopPoolSize());
 //
 //  }
+public static void main(String[] args) {
+  Vertx vertx = Vertx.vertx();
+  vertx.deployVerticle(new MyVerticle());
+}
 
   @Override
   public void start(Promise<Void> startPromise) throws InterruptedException {
