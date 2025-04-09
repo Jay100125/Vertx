@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class FuturePromise {
   private static final Logger LOG = LoggerFactory.getLogger(FuturePromise.class);
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     // Create a Vert.x instance
     Vertx vertx = Vertx.vertx();
 
@@ -67,13 +67,14 @@ public class FuturePromise {
     CompositeFuture y = Future.all(List.of(future, future));
     y.onComplete(res -> {
       for(int i = 0; i < y.size(); i++) {
-       LOG.info("Future.any() & " + i + " " + y.resultAt(i));
+        LOG.info("Future.any() & " + i + " " + y.resultAt(i));
       }
     });
 
     // Handler for successful completion
     future.onSuccess(result -> {
       LOG.info("Success: " + result);
+//      LOG.info(String.valueOf(future.isComplete()));
     });
 
     // Handler for completion (either success or failure)
@@ -107,8 +108,8 @@ public class FuturePromise {
     // Simulate an asynchronous operation using Vert.x Timer
     vertx.setTimer(1000, (i) -> {
       // Completing the Promise after 1 second
-      promise.complete("Done");
-
+//      promise.complete("Done");
+      promise.fail("Something went wrong");
       /*
        * Output when promise completes successfully:
        * - Success: Done

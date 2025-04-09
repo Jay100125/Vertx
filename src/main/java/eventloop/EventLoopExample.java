@@ -27,7 +27,7 @@ public class EventLoopExample extends AbstractVerticle {
 
   public void start(final Promise<Void> startPromise) throws Exception {
     LOGGER.info("EventLoopExample started");
-    LOGGER.debug("start {}", getClass().getName()); // Fixed format string
+    LOGGER.debug("start {}", getClass().getName());
     startPromise.complete();
     // Uncomment to test event loop blocking warning
     // Thread.sleep(10000);

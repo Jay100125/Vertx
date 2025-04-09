@@ -1,39 +1,47 @@
 package eventbus;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
+import io.vertx.core.eventbus.MessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PublisherAndSubscriber{
+import java.util.concurrent.TimeUnit;
+
+public class PublisherAndSubscriber {
 
   private static final Logger LOG = LoggerFactory.getLogger(PublisherAndSubscriber.class);
 
   public static void main(String[] args) {
-    Vertx vertx = Vertx.vertx();
-    vertx.deployVerticle(new Subscriber1());
-    vertx.deployVerticle(new Subscriber2());
-    vertx.deployVerticle(Subscriber3.class.getName(), new DeploymentOptions().setInstances(3));
+    Vertx vertx = Vertx.vertx(new VertxOptions().setMaxEventLoopExecuteTime(20000).setMaxEventLoopExecuteTimeUnit(TimeUnit.MILLISECONDS));
+//    vertx.deployVerticle(new Subscriber1());
+//    vertx.deployVerticle(new Subscriber2());
+    vertx.deployVerticle(Subscriber3.class.getName(), new DeploymentOptions().setInstances(1));
     vertx.deployVerticle(new Publisher());
-
   }
 
-   static class Publisher extends AbstractVerticle {
+  static class Publisher extends AbstractVerticle {
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
       startPromise.complete();
-      vertx.eventBus().publish(Publisher.class.getName(), " A message to everyone");
 
+      // Send messages periodically at a fast rate (every 50ms)
+      vertx.setPeriodic(1000, id -> {
+        String message = "Message at time: " + System.currentTimeMillis();
+        LOG.info("Publishing: " + message);
+        vertx.eventBus().publish(Publisher.class.getName(), message);
+      });
     }
   }
 
-   public static class Subscriber1 extends AbstractVerticle {
+  public static class Subscriber1 extends AbstractVerticle {
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
       startPromise.complete();
-      vertx.eventBus().consumer(Publisher.class.getName(), msg -> {
+      vertx.eventBus().localConsumer(Publisher.class.getName(), msg -> {
+        LOG.info("Received message: sub 1 " + msg.body().toString() + " On " + Thread.currentThread().getName());
+      });
+
+      vertx.eventBus().consumer("hello", msg -> {
         LOG.info("Received message: sub 1 " + msg.body().toString() + " On " + Thread.currentThread().getName());
       });
     }
@@ -43,7 +51,7 @@ public class PublisherAndSubscriber{
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
       startPromise.complete();
-      vertx.eventBus().consumer(Publisher.class.getName(), msg -> {
+      vertx.eventBus().localConsumer(Publisher.class.getName(), msg -> {
         LOG.info("Received message: sub 2 " + msg.body().toString() + " On " + Thread.currentThread().getName());
       });
       vertx.eventBus().consumer(Publisher.class.getName(), msg -> {
@@ -56,9 +64,26 @@ public class PublisherAndSubscriber{
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
       startPromise.complete();
-      vertx.eventBus().consumer(Publisher.class.getName(), msg -> {
-        LOG.info("Received message: sub 3 " + msg.body().toString() + " On " + Thread.currentThread().getName());
+
+      // Set a small queue size of 5 messages
+//      MessageConsumerOptions options = new MessageConsumerOptions().setMaxBufferedMessages(5);
+
+      MessageConsumer<Object> consumer = vertx.eventBus().localConsumer(Publisher.class.getName(), msg -> {
+        LOG.info("Received message START: sub 3 " + msg.body().toString() + " On " + Thread.currentThread().getName());
+
+        // Simulate slow processing by sleeping
+        try {
+          // Sleep for 500ms to simulate slow processing
+          Thread.sleep(5000);
+        } catch (InterruptedException e) {
+          LOG.error("Interrupted while processing", e);
+        }
+
+        LOG.info("Received message END: sub 3 " + msg.body().toString() + " On " + Thread.currentThread().getName());
       });
+
+      // Set the max queue size to 5 messages
+      consumer.setMaxBufferedMessages(5);
     }
   }
 }

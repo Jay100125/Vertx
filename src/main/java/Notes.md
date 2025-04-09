@@ -1,5 +1,7 @@
 ## doubts
 - context.runOnContext()
+- what is quorum
+- setDeamonThread
 
 
 ## what is vertx
