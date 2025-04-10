@@ -27,14 +27,16 @@ public class MyVerticle extends AbstractVerticle
 //  }
 public static void main(String[] args) {
   Vertx vertx = Vertx.vertx();
-  vertx.deployVerticle(new MyVerticle());
+
+  Verticle verticle = new MyVerticle();
+  vertx.deployVerticle(verticle);
 }
 
   @Override
   public void start(Promise<Void> startPromise) throws InterruptedException {
     LOG.info("Verticle deployed");
 
-    Thread.sleep(2000);
+      Thread.sleep(20000);
 
     startPromise.complete();
   }

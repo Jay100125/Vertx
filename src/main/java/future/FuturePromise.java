@@ -1,9 +1,6 @@
 package future;
 
-import io.vertx.core.CompositeFuture;
-import io.vertx.core.Future;
-import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +22,7 @@ public class FuturePromise {
   private static final Logger LOG = LoggerFactory.getLogger(FuturePromise.class);
   public static void main(String[] args) throws InterruptedException {
     // Create a Vert.x instance
-    Vertx vertx = Vertx.vertx();
+    Vertx vertx = Vertx.vertx(new VertxOptions());
 
     // Create a Promise (allows setting the result later)
     Promise<String> promise = Promise.promise();

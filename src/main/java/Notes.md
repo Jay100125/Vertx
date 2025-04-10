@@ -2,6 +2,7 @@
 - context.runOnContext()
 - what is quorum
 - setDeamonThread
+- executeBlocking - 10 or 60
 
 
 ## what is vertx

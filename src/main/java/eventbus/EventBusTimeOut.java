@@ -27,9 +27,9 @@ class SenderVerticle extends AbstractVerticle {
       if (reply.succeeded()) {
         LOG.info("Received reply: {}", reply.result().body());
       }
-//      else {
-//        LOG.error("Failed to get reply: {}", reply.cause().getMessage());
-//      }
+      else {
+        LOG.error("Failed to get reply: {}", reply.cause().getMessage());
+      }
     });
   }
 }

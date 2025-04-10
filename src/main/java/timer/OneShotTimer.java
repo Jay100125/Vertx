@@ -30,21 +30,33 @@ public class OneShotTimer extends AbstractVerticle {
     });
 
     // Offload blocking task
-    vertx.executeBlocking(promise -> {
-      for (int i = 0; i < Integer.MAX_VALUE; i++) {
-        for (int j = 0; j < Integer.MAX_VALUE; j++) {
-          LOG.info("Thread in the while loop: " + Thread.currentThread().getName());
-          LOG.info("Start method");
-        }
-      }
-      promise.complete();
-    }, res -> {
-      // Done with blocking task
-      LOG.info("Blocking task done.");
-    });
+//    vertx.executeBlocking(promise -> {
+//      for (int i = 0; i < Integer.MAX_VALUE; i++) {
+//        for (int j = 0; j < Integer.MAX_VALUE; j++) {
+//          LOG.info("Thread in the while loop: " + Thread.currentThread().getName());
+//          LOG.info("Start method");
+//        }
+//      }
+//      promise.complete();
+//    }, res -> {
+//      // Done with blocking task
+//      LOG.info("Blocking task done.");
+//    });
 
+    vertx.setTimer(10000, res -> {
+      LOG.info("May have issue");
+    });
     LOG.info("OneShotTimer started.");
 
+
+    vertx.executeBlocking(promise -> {
+      try{
+        Thread.sleep(200000);
+      }
+      catch(Exception e){
+        LOG.info("Error");
+      }
+    });
     startPromise.complete();
   }
 

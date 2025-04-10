@@ -2,6 +2,7 @@ package eventbus;
 
 import io.vertx.core.*;
 import io.vertx.core.eventbus.MessageConsumer;
+import io.vertx.core.eventbus.MessageConsumerOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
