@@ -34,10 +34,21 @@ public class Sender extends AbstractVerticle
         }
       });
 
-      vertx.setPeriodic(1000,  res -> {
-        socket.write("Hello world " + counter.incrementAndGet());
-        LOG.info("Sent " + counter + " messages");
+      socket.sendFile("/home/jay/Downloads/goland-2024.3.5.tar.gz").onComplete(result -> {
+        if(result.succeeded())
+        {
+          LOG.info("File send ");
+        }
+        else
+        {
+          LOG.info("Some error occurred "+ result.cause().getMessage());
+        }
       });
+
+//      vertx.setPeriodic(1000,  res -> {
+//        socket.write("Hello world " + counter.incrementAndGet());
+//        LOG.info("Sent " + counter + " messages");
+//      });
     }).listen(8080, "localhost").onComplete(res->{
       LOG.info("Server started on port 8080 "+res.result());
     }).onFailure(result -> {

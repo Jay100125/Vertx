@@ -12,12 +12,13 @@ public class PublisherAndSubscriber {
 
   private static final Logger LOG = LoggerFactory.getLogger(PublisherAndSubscriber.class);
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     Vertx vertx = Vertx.vertx(new VertxOptions().setMaxEventLoopExecuteTime(20000).setMaxEventLoopExecuteTimeUnit(TimeUnit.MILLISECONDS));
-//    vertx.deployVerticle(new Subscriber1());
-//    vertx.deployVerticle(new Subscriber2());
-    vertx.deployVerticle(Subscriber3.class.getName(), new DeploymentOptions().setInstances(1));
     vertx.deployVerticle(new Publisher());
+    Thread.sleep(10000);
+    vertx.deployVerticle(new Subscriber1());
+//    vertx.deployVerticle(new Subscriber2());
+//    vertx.deployVerticle(Subscriber3.class.getName(), new DeploymentOptions().setInstances(1));
   }
 
   static class Publisher extends AbstractVerticle {

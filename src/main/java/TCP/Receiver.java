@@ -29,11 +29,9 @@ public class Receiver extends AbstractVerticle {
           }
         });
 
-        vertx.setPeriodic(1000, l->{
           socket.handler(handler -> {
             LOG.info("Buffer received: " + handler.toString());
           });
-        });
 
       }
       else
