@@ -13,9 +13,10 @@ public class Main {
     Vertx vertx = Vertx.vertx();
     vertx.deployVerticle(new Sender()).onFailure(result -> {
       LOG.info("Result " + result.getMessage());
-    }).compose(res->{
-      return vertx.deployVerticle(new Receiver());
     });
+//      .compose(res->{
+//      return vertx.deployVerticle(new Receiver());
+//    });
 
 
   }

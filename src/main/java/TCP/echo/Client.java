@@ -15,7 +15,7 @@ public class Client extends AbstractVerticle {
 
   public void start() throws Exception
   {
-    vertx.createNetClient().connect(1234, "localhost", res -> {
+    vertx.createNetClient().connect(8080, "localhost", res -> {
       if (res.succeeded()) {
         NetSocket socket = res.result();
         socket.handler(buff -> {

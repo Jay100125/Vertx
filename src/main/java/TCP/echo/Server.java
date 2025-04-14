@@ -16,7 +16,7 @@ public class Server extends AbstractVerticle {
   {
     vertx.createNetServer().connectHandler(socket -> {
       socket.pipeTo(socket);
-    }).listen(1234);
+    }).listen(8080);
 
     LOG.info("Server started at port 1234");
   }
